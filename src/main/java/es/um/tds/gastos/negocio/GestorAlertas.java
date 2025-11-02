@@ -149,7 +149,7 @@ public class GestorAlertas implements IGestorAlertas {
                 ? " en " + alerta.getCategoria().getNombre() 
                 : "";
         
-        return String.format("⚠️ Has superado tu límite %s%s: %.2f€ de %.2f€",
+        return String.format("ALERTA: Has superado tu limite %s%s: %.2f€ de %.2f€",
                 periodo, categoria, gastoActual, alerta.getLimiteGasto());
     }
 }
