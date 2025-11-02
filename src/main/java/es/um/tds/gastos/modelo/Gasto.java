@@ -15,6 +15,7 @@ public class Gasto {
     private LocalDate fecha;
     private String descripcion;
     private Categoria categoria;
+    private PersonaCuenta pagador;  // Para cuentas compartidas
     
     /**
      * Constructor completo de Gasto
@@ -61,6 +62,10 @@ public class Gasto {
         return categoria;
     }
     
+    public PersonaCuenta getPagador() {
+        return pagador;
+    }
+    
     // Setters
     public void setId(int id) {
         this.id = id;
@@ -94,9 +99,25 @@ public class Gasto {
         this.categoria = categoria;
     }
     
+    public void setPagador(PersonaCuenta pagador) {
+        this.pagador = pagador;
+    }
+    
+    /**
+     * Indica si este gasto pertenece a una cuenta compartida
+     */
+    public boolean esDeCuentaCompartida() {
+        return pagador != null;
+    }
+    
     @Override
     public String toString() {
-        return String.format("Gasto[id=%d, cantidad=%.2f€, fecha=%s, categoría=%s]", 
-                             id, cantidad, fecha, categoria.getNombre());
+        String info = String.format("Gasto[id=%d, cantidad=%.2f€, fecha=%s, categoría=%s", 
+                                    id, cantidad, fecha, categoria.getNombre());
+        if (pagador != null) {
+            info += ", pagador=" + pagador.getNombre();
+        }
+        info += "]";
+        return info;
     }
 }
