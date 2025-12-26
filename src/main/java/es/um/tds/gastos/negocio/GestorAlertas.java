@@ -6,25 +6,57 @@ import es.um.tds.gastos.modelo.Gasto;
 import es.um.tds.gastos.modelo.Notificacion;
 import es.um.tds.gastos.modelo.TipoAlerta;
 import es.um.tds.gastos.persistencia.IRepositorioAlertas;
+import es.um.tds.gastos.persistencia.RepositorioAlertasMemoria;
 import es.um.tds.gastos.util.FiltroGastos;
 import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Implementación del gestor de alertas y notificaciones.
+ * Implementacion del gestor de alertas y notificaciones.
+ * Implementa el patron Singleton para garantizar una unica instancia
+ * en toda la aplicacion.
  * 
  * @author TDS - GestionGastos
  * @version 1.0
  */
 public class GestorAlertas implements IGestorAlertas {
 
+    private static GestorAlertas instancia;
     private IRepositorioAlertas repositorio;
 
-    public GestorAlertas(IRepositorioAlertas repositorio) {
+    /**
+     * Constructor privado para implementar el patron Singleton.
+     */
+    private GestorAlertas(IRepositorioAlertas repositorio) {
         if (repositorio == null) {
             throw new IllegalArgumentException("El repositorio no puede ser nulo");
         }
         this.repositorio = repositorio;
+    }
+
+    /**
+     * Obtiene la unica instancia del gestor de alertas.
+     * 
+     * @return la instancia unica de GestorAlertas
+     */
+    public static GestorAlertas getInstance() {
+        if (instancia == null) {
+            instancia = new GestorAlertas(new RepositorioAlertasMemoria());
+        }
+        return instancia;
+    }
+
+    /**
+     * Obtiene la instancia del gestor usando un repositorio especifico.
+     * 
+     * @param repositorio el repositorio a usar
+     * @return la instancia unica de GestorAlertas
+     */
+    public static GestorAlertas getInstance(IRepositorioAlertas repositorio) {
+        if (instancia == null) {
+            instancia = new GestorAlertas(repositorio);
+        }
+        return instancia;
     }
 
     @Override
