@@ -4,6 +4,7 @@ import es.um.tds.gastos.modelo.Alerta;
 import es.um.tds.gastos.modelo.Categoria;
 import es.um.tds.gastos.modelo.Gasto;
 import es.um.tds.gastos.modelo.Notificacion;
+import es.um.tds.gastos.modelo.TipoAlerta;
 import es.um.tds.gastos.persistencia.IRepositorioAlertas;
 import es.um.tds.gastos.util.FiltroGastos;
 import java.time.LocalDate;
