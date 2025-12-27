@@ -2,10 +2,8 @@ package es.um.tds.gastos.controlador;
 
 import es.um.tds.gastos.modelo.Alerta;
 import es.um.tds.gastos.modelo.Categoria;
-import es.um.tds.gastos.modelo.CuentaCompartida;
 import es.um.tds.gastos.modelo.Gasto;
 import es.um.tds.gastos.modelo.Notificacion;
-import es.um.tds.gastos.modelo.PersonaCuenta;
 import es.um.tds.gastos.modelo.TipoAlerta;
 import es.um.tds.gastos.negocio.GestorAlertas;
 import es.um.tds.gastos.negocio.GestorCategorias;
