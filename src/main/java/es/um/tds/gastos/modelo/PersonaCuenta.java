@@ -41,6 +41,21 @@ public class PersonaCuenta {
         this.saldoPendiente = 0.0;
     }
 
+    /**
+     * Crea una persona solo con nombre (sin email).
+     * 
+     * @param nombre nombre de la persona
+     */
+    public PersonaCuenta(String nombre) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre no puede estar vacío");
+        }
+        this.nombre = nombre;
+        this.email = "";
+        this.porcentajeGasto = 0.0;
+        this.saldoPendiente = 0.0;
+    }
+
     // Getters y Setters
     public int getId() {
         return id;

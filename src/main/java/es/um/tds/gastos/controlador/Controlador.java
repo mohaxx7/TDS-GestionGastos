@@ -220,10 +220,45 @@ public class Controlador {
                         gasto.getCategoria());
             }
 
+            // Verificar alertas despues de importar todos los gastos
+            gestorAlertas.verificarAlertas(gestorGastos.obtenerTodosLosGastos());
+
             return gastosImportados.size();
         } catch (Exception e) {
             System.err.println("Error importando: " + e.getMessage());
             return 0;
         }
+    }
+
+    // OPERACIONES DE CUENTAS COMPARTIDAS
+
+    private java.util.List<es.um.tds.gastos.modelo.CuentaCompartida> cuentasCompartidas = new java.util.ArrayList<>();
+
+    /**
+     * Crea una nueva cuenta compartida.
+     */
+    public es.um.tds.gastos.modelo.CuentaCompartida crearCuentaCompartida(
+            String nombre, java.util.List<es.um.tds.gastos.modelo.PersonaCuenta> personas) {
+        es.um.tds.gastos.modelo.CuentaCompartida cuenta = new es.um.tds.gastos.modelo.CuentaCompartida(nombre,
+                personas);
+        cuentasCompartidas.add(cuenta);
+        return cuenta;
+    }
+
+    /**
+     * Obtiene todas las cuentas compartidas.
+     */
+    public java.util.List<es.um.tds.gastos.modelo.CuentaCompartida> obtenerCuentasCompartidas() {
+        return new java.util.ArrayList<>(cuentasCompartidas);
+    }
+
+    /**
+     * Registra un gasto en una cuenta compartida.
+     */
+    public void registrarGastoCompartido(es.um.tds.gastos.modelo.CuentaCompartida cuenta,
+            double cantidad, java.time.LocalDate fecha, String descripcion,
+            Categoria categoria, es.um.tds.gastos.modelo.PersonaCuenta pagador) {
+        Gasto gasto = gestorGastos.registrarGasto(cantidad, fecha, descripcion, categoria);
+        cuenta.registrarGasto(gasto, pagador);
     }
 }
