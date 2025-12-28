@@ -178,13 +178,31 @@ public class VentanaPrincipal extends Application {
             }
         });
 
+        // Boton importar CSV
+        Button btnImportar = new Button("Importar CSV");
+        btnImportar.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white;");
+        Label lblMensajeImport = new Label();
+        btnImportar.setOnAction(e -> {
+            javafx.stage.FileChooser fileChooser = new javafx.stage.FileChooser();
+            fileChooser.setTitle("Seleccionar archivo CSV");
+            fileChooser.getExtensionFilters().add(
+                    new javafx.stage.FileChooser.ExtensionFilter("CSV", "*.csv"));
+            java.io.File archivo = fileChooser.showOpenDialog(null);
+            if (archivo != null) {
+                int importados = controlador.importarGastos(archivo.getAbsolutePath());
+                lblMensajeImport.setText("Importados: " + importados + " gastos");
+                lblMensajeImport.setStyle("-fx-text-fill: green;");
+                actualizarTabla();
+            }
+        });
+
         // Label total
         Label lblTotal = new Label("Total: 0.00 €");
         lblTotal.setStyle("-fx-font-weight: bold;");
 
-        HBox botonesTabla = new HBox(20, btnEliminar, lblTotal);
+        HBox botonesTabla = new HBox(10, btnEliminar, btnImportar, lblTotal);
 
-        VBox panel = new VBox(10, titulo, tablaGastos, botonesTabla);
+        VBox panel = new VBox(10, titulo, tablaGastos, botonesTabla, lblMensajeImport);
         panel.setPadding(new Insets(10));
         panel.setStyle("-fx-border-color: #ccc; -fx-border-radius: 5;");
 

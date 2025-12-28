@@ -194,4 +194,36 @@ public class Controlador {
     public void marcarTodasLasNotificacionesComoLeidas() {
         gestorAlertas.marcarTodasLasNotificacionesComoLeidas();
     }
+
+    // OPERACIONES DE IMPORTACION
+
+    /**
+     * Importa gastos desde un archivo externo.
+     * Usa el patron Factory Method para crear el adaptador adecuado.
+     * 
+     * @param rutaArchivo ruta al archivo a importar
+     * @return numero de gastos importados
+     */
+    public int importarGastos(String rutaArchivo) {
+        try {
+            es.um.tds.gastos.importador.FactoriaAdaptadores factoria = es.um.tds.gastos.importador.FactoriaAdaptadores
+                    .getInstance();
+            es.um.tds.gastos.importador.AdaptadorImportacion adaptador = factoria.crearAdaptador(rutaArchivo);
+
+            java.util.List<Gasto> gastosImportados = adaptador.importarGastos(rutaArchivo);
+
+            for (Gasto gasto : gastosImportados) {
+                gestorGastos.registrarGasto(
+                        gasto.getCantidad(),
+                        gasto.getFecha(),
+                        gasto.getDescripcion(),
+                        gasto.getCategoria());
+            }
+
+            return gastosImportados.size();
+        } catch (Exception e) {
+            System.err.println("Error importando: " + e.getMessage());
+            return 0;
+        }
+    }
 }
