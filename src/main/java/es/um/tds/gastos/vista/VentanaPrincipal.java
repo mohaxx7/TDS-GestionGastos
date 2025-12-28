@@ -310,7 +310,15 @@ public class VentanaPrincipal extends Application {
         lblTotal = new Label("Total: 0.00 €");
         lblTotal.setStyle("-fx-font-weight: bold;");
 
-        HBox botonesTabla = new HBox(10, btnEliminar, btnImportar, lblTotal);
+        // Boton alertas
+        Button btnAlertas = new Button("Alertas");
+        btnAlertas.setStyle("-fx-background-color: #FF9800; -fx-text-fill: white;");
+        btnAlertas.setOnAction(e -> {
+            VentanaAlertas ventanaAlertas = new VentanaAlertas();
+            ventanaAlertas.mostrar();
+        });
+
+        HBox botonesTabla = new HBox(10, btnEliminar, btnImportar, btnAlertas, lblTotal);
 
         VBox panel = new VBox(10, titulo, tablaGastos, botonesTabla, lblMensajeImport);
         panel.setPadding(new Insets(10));
