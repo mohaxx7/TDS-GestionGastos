@@ -6,7 +6,7 @@ import es.um.tds.gastos.modelo.Gasto;
 import es.um.tds.gastos.modelo.Notificacion;
 import es.um.tds.gastos.modelo.TipoAlerta;
 import es.um.tds.gastos.persistencia.IRepositorioAlertas;
-import es.um.tds.gastos.persistencia.RepositorioAlertasMemoria;
+import es.um.tds.gastos.persistencia.RepositorioAlertasJSON;
 import es.um.tds.gastos.util.FiltroGastos;
 import java.time.LocalDate;
 import java.util.List;
@@ -36,12 +36,13 @@ public class GestorAlertas implements IGestorAlertas {
 
     /**
      * Obtiene la unica instancia del gestor de alertas.
+     * Usa repositorio JSON por defecto para persistir alertas.
      * 
      * @return la instancia unica de GestorAlertas
      */
     public static GestorAlertas getInstance() {
         if (instancia == null) {
-            instancia = new GestorAlertas(new RepositorioAlertasMemoria());
+            instancia = new GestorAlertas(new RepositorioAlertasJSON());
         }
         return instancia;
     }
