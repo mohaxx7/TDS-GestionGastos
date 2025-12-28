@@ -2,7 +2,7 @@ package es.um.tds.gastos.negocio;
 
 import es.um.tds.gastos.modelo.Categoria;
 import es.um.tds.gastos.persistencia.IRepositorioCategorias;
-import es.um.tds.gastos.persistencia.RepositorioCategoriasMemoria;
+import es.um.tds.gastos.persistencia.RepositorioCategoriasJSON;
 import java.util.List;
 
 /**
@@ -30,12 +30,13 @@ public class GestorCategorias implements IGestorCategorias {
 
     /**
      * Obtiene la unica instancia del gestor de categorias.
+     * Usa repositorio JSON por defecto para persistir datos.
      * 
      * @return la instancia unica de GestorCategorias
      */
     public static GestorCategorias getInstance() {
         if (instancia == null) {
-            instancia = new GestorCategorias(new RepositorioCategoriasMemoria());
+            instancia = new GestorCategorias(new RepositorioCategoriasJSON());
         }
         return instancia;
     }

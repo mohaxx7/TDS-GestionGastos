@@ -3,7 +3,7 @@ package es.um.tds.gastos.negocio;
 import es.um.tds.gastos.modelo.Categoria;
 import es.um.tds.gastos.modelo.Gasto;
 import es.um.tds.gastos.persistencia.IRepositorioGastos;
-import es.um.tds.gastos.persistencia.RepositorioGastosMemoria;
+import es.um.tds.gastos.persistencia.RepositorioGastosJSON;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,13 +34,13 @@ public class GestorGastos implements IGestorGastos {
 
     /**
      * Obtiene la unica instancia del gestor de gastos.
-     * Si no existe, la crea con un repositorio en memoria por defecto.
+     * Si no existe, la crea con un repositorio JSON por defecto.
      * 
      * @return la instancia unica de GestorGastos
      */
     public static GestorGastos getInstance() {
         if (instancia == null) {
-            instancia = new GestorGastos(new RepositorioGastosMemoria());
+            instancia = new GestorGastos(new RepositorioGastosJSON());
         }
         return instancia;
     }
