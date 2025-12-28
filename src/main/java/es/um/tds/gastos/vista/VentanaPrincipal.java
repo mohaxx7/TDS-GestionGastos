@@ -26,6 +26,7 @@ public class VentanaPrincipal extends Application {
     private Controlador controlador;
     private TableView<Gasto> tablaGastos;
     private ObservableList<Gasto> listaGastos;
+    private Label lblTotal;
 
     @Override
     public void start(Stage stage) {
@@ -34,14 +35,20 @@ public class VentanaPrincipal extends Application {
         // Panel izquierdo: Formulario para añadir gasto
         VBox panelFormulario = crearPanelFormulario();
 
+        // Panel de filtros
+        VBox panelFiltros = crearPanelFiltros();
+
+        // Panel izquierdo completo
+        VBox panelIzquierdo = new VBox(20, panelFormulario, panelFiltros);
+
         // Panel derecho: Tabla de gastos
         VBox panelTabla = crearPanelTabla();
 
         // Layout principal
-        HBox root = new HBox(20, panelFormulario, panelTabla);
+        HBox root = new HBox(20, panelIzquierdo, panelTabla);
         root.setPadding(new Insets(20));
 
-        Scene scene = new Scene(root, 900, 500);
+        Scene scene = new Scene(root, 950, 600);
         stage.setTitle("Gestion de Gastos - TDS");
         stage.setScene(scene);
         stage.show();
@@ -134,6 +141,109 @@ public class VentanaPrincipal extends Application {
     }
 
     /**
+     * Crea el panel de filtros para buscar gastos.
+     */
+    private VBox crearPanelFiltros() {
+        Label titulo = new Label("Filtrar Gastos");
+        titulo.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+        // Filtro por categoria
+        Label lblCategoria = new Label("Categoria:");
+        ComboBox<Categoria> comboFiltroCategoria = new ComboBox<>();
+        comboFiltroCategoria.setPromptText("Todas");
+        comboFiltroCategoria.getItems().add(null); // Opcion "Todas"
+        comboFiltroCategoria.getItems().addAll(controlador.obtenerTodasLasCategorias());
+        comboFiltroCategoria.setCellFactory(lv -> new ListCell<Categoria>() {
+            @Override
+            protected void updateItem(Categoria cat, boolean empty) {
+                super.updateItem(cat, empty);
+                setText(cat == null ? "Todas" : cat.getNombre());
+            }
+        });
+        comboFiltroCategoria.setButtonCell(new ListCell<Categoria>() {
+            @Override
+            protected void updateItem(Categoria cat, boolean empty) {
+                super.updateItem(cat, empty);
+                setText(cat == null ? "Todas" : cat.getNombre());
+            }
+        });
+
+        // Filtro por fechas
+        Label lblDesde = new Label("Desde:");
+        DatePicker dateDesde = new DatePicker();
+        dateDesde.setPromptText("Fecha inicio");
+
+        Label lblHasta = new Label("Hasta:");
+        DatePicker dateHasta = new DatePicker();
+        dateHasta.setPromptText("Fecha fin");
+
+        // Botones
+        Button btnFiltrar = new Button("Aplicar Filtros");
+        btnFiltrar.setStyle("-fx-background-color: #9C27B0; -fx-text-fill: white;");
+
+        Button btnLimpiar = new Button("Limpiar");
+        btnLimpiar.setOnAction(e -> {
+            comboFiltroCategoria.setValue(null);
+            dateDesde.setValue(null);
+            dateHasta.setValue(null);
+            actualizarTabla();
+        });
+
+        btnFiltrar.setOnAction(e -> {
+            aplicarFiltros(
+                    comboFiltroCategoria.getValue(),
+                    dateDesde.getValue(),
+                    dateHasta.getValue());
+        });
+
+        HBox botonesBox = new HBox(10, btnFiltrar, btnLimpiar);
+
+        VBox panel = new VBox(8,
+                titulo,
+                lblCategoria, comboFiltroCategoria,
+                lblDesde, dateDesde,
+                lblHasta, dateHasta,
+                botonesBox);
+        panel.setPadding(new Insets(10));
+        panel.setStyle("-fx-border-color: #ccc; -fx-border-radius: 5;");
+        panel.setPrefWidth(300);
+
+        return panel;
+    }
+
+    /**
+     * Aplica los filtros seleccionados a la lista de gastos.
+     */
+    private void aplicarFiltros(Categoria categoria, java.time.LocalDate desde, java.time.LocalDate hasta) {
+        java.util.List<Gasto> gastosFiltrados = controlador.obtenerTodosLosGastos();
+
+        // Filtrar por categoria
+        if (categoria != null) {
+            gastosFiltrados = gastosFiltrados.stream()
+                    .filter(g -> g.getCategoria().getNombre().equals(categoria.getNombre()))
+                    .collect(java.util.stream.Collectors.toList());
+        }
+
+        // Filtrar por fecha desde
+        if (desde != null) {
+            gastosFiltrados = gastosFiltrados.stream()
+                    .filter(g -> !g.getFecha().isBefore(desde))
+                    .collect(java.util.stream.Collectors.toList());
+        }
+
+        // Filtrar por fecha hasta
+        if (hasta != null) {
+            gastosFiltrados = gastosFiltrados.stream()
+                    .filter(g -> !g.getFecha().isAfter(hasta))
+                    .collect(java.util.stream.Collectors.toList());
+        }
+
+        listaGastos.clear();
+        listaGastos.addAll(gastosFiltrados);
+        actualizarTotal();
+    }
+
+    /**
      * Crea el panel con la tabla de gastos.
      */
     private VBox crearPanelTabla() {
@@ -197,7 +307,7 @@ public class VentanaPrincipal extends Application {
         });
 
         // Label total
-        Label lblTotal = new Label("Total: 0.00 €");
+        lblTotal = new Label("Total: 0.00 €");
         lblTotal.setStyle("-fx-font-weight: bold;");
 
         HBox botonesTabla = new HBox(10, btnEliminar, btnImportar, lblTotal);
@@ -236,6 +346,17 @@ public class VentanaPrincipal extends Application {
     private void actualizarTabla() {
         listaGastos.clear();
         listaGastos.addAll(controlador.obtenerTodosLosGastos());
+        actualizarTotal();
+    }
+
+    /**
+     * Calcula y actualiza el total de gastos.
+     */
+    private void actualizarTotal() {
+        double total = listaGastos.stream()
+                .mapToDouble(Gasto::getCantidad)
+                .sum();
+        lblTotal.setText(String.format("Total: %.2f €", total));
     }
 
     public static void main(String[] args) {
