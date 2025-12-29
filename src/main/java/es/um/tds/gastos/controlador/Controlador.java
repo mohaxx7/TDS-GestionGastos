@@ -92,6 +92,16 @@ public class Controlador {
     }
 
     /**
+     * Elimina todos los gastos del sistema.
+     */
+    public void eliminarTodosLosGastos() {
+        List<Gasto> gastos = gestorGastos.obtenerTodosLosGastos();
+        for (Gasto gasto : gastos) {
+            gestorGastos.eliminarGasto(gasto.getId());
+        }
+    }
+
+    /**
      * Filtra gastos por rango de fechas.
      */
     public List<Gasto> filtrarGastosPorFechas(LocalDate fechaInicio, LocalDate fechaFin) {
@@ -232,7 +242,7 @@ public class Controlador {
 
     // OPERACIONES DE CUENTAS COMPARTIDAS
 
-    private java.util.List<es.um.tds.gastos.modelo.CuentaCompartida> cuentasCompartidas = new java.util.ArrayList<>();
+    private es.um.tds.gastos.persistencia.RepositorioCuentasCompartidasJSON repoCuentas = new es.um.tds.gastos.persistencia.RepositorioCuentasCompartidasJSON();
 
     /**
      * Crea una nueva cuenta compartida.
@@ -241,7 +251,7 @@ public class Controlador {
             String nombre, java.util.List<es.um.tds.gastos.modelo.PersonaCuenta> personas) {
         es.um.tds.gastos.modelo.CuentaCompartida cuenta = new es.um.tds.gastos.modelo.CuentaCompartida(nombre,
                 personas);
-        cuentasCompartidas.add(cuenta);
+        repoCuentas.guardar(cuenta);
         return cuenta;
     }
 
@@ -249,7 +259,7 @@ public class Controlador {
      * Obtiene todas las cuentas compartidas.
      */
     public java.util.List<es.um.tds.gastos.modelo.CuentaCompartida> obtenerCuentasCompartidas() {
-        return new java.util.ArrayList<>(cuentasCompartidas);
+        return repoCuentas.obtenerTodas();
     }
 
     /**
@@ -260,5 +270,6 @@ public class Controlador {
             Categoria categoria, es.um.tds.gastos.modelo.PersonaCuenta pagador) {
         Gasto gasto = gestorGastos.registrarGasto(cantidad, fecha, descripcion, categoria);
         cuenta.registrarGasto(gasto, pagador);
+        repoCuentas.actualizar(cuenta); // Guardar cambios
     }
 }
