@@ -288,6 +288,16 @@ public class VentanaPrincipal extends Application {
             }
         });
 
+        // Boton editar
+        Button btnEditar = new Button("Editar");
+        btnEditar.setStyle("-fx-background-color: #FF9800; -fx-text-fill: white;");
+        btnEditar.setOnAction(e -> {
+            Gasto seleccionado = tablaGastos.getSelectionModel().getSelectedItem();
+            if (seleccionado != null) {
+                mostrarDialogoEditar(seleccionado);
+            }
+        });
+
         // Boton importar CSV
         Button btnImportar = new Button("Importar CSV");
         btnImportar.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white;");
@@ -349,7 +359,7 @@ public class VentanaPrincipal extends Application {
             ventana.mostrar();
         });
 
-        HBox botonesTabla = new HBox(8, btnEliminar, btnImportar, btnAlertas, btnCompartidas, btnBorrarTodos,
+        HBox botonesTabla = new HBox(8, btnEliminar, btnEditar, btnImportar, btnAlertas, btnCompartidas, btnBorrarTodos,
                 btnGrafico, lblTotal);
 
         VBox panel = new VBox(10, titulo, tablaGastos, botonesTabla, lblMensajeImport);
@@ -397,6 +407,51 @@ public class VentanaPrincipal extends Application {
                 .mapToDouble(Gasto::getCantidad)
                 .sum();
         lblTotal.setText(String.format("Total: %.2f €", total));
+    }
+
+    /**
+     * Muestra dialogo para editar un gasto.
+     */
+    private void mostrarDialogoEditar(Gasto gasto) {
+        Dialog<Gasto> dialog = new Dialog<>();
+        dialog.setTitle("Editar Gasto");
+
+        TextField txtCantidad = new TextField(String.valueOf(gasto.getCantidad()));
+        DatePicker dateFecha = new DatePicker(gasto.getFecha());
+        TextField txtDescripcion = new TextField(gasto.getDescripcion());
+        ComboBox<Categoria> comboCategoria = new ComboBox<>();
+        comboCategoria.getItems().addAll(controlador.obtenerTodasLasCategorias());
+        comboCategoria.setValue(gasto.getCategoria());
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.add(new Label("Cantidad:"), 0, 0);
+        grid.add(txtCantidad, 1, 0);
+        grid.add(new Label("Fecha:"), 0, 1);
+        grid.add(dateFecha, 1, 1);
+        grid.add(new Label("Descripción:"), 0, 2);
+        grid.add(txtDescripcion, 1, 2);
+        grid.add(new Label("Categoría:"), 0, 3);
+        grid.add(comboCategoria, 1, 3);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        dialog.setResultConverter(btn -> {
+            if (btn == ButtonType.OK) {
+                try {
+                    double cantidad = Double.parseDouble(txtCantidad.getText());
+                    controlador.editarGasto(gasto.getId(), cantidad,
+                            dateFecha.getValue(), txtDescripcion.getText(), comboCategoria.getValue());
+                } catch (NumberFormatException ex) {
+                }
+            }
+            return null;
+        });
+
+        dialog.showAndWait();
+        actualizarTabla();
     }
 
     public static void main(String[] args) {
