@@ -81,10 +81,8 @@ public class PersonaCuenta {
     }
 
     public void setEmail(String email) {
-        if (email == null || email.trim().isEmpty()) {
-            throw new IllegalArgumentException("El email no puede estar vacío");
-        }
-        this.email = email;
+        // Permitimos email vacío para compatibilidad con JSON
+        this.email = email != null ? email : "";
     }
 
     public double getPorcentajeGasto() {

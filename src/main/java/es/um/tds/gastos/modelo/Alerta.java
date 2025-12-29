@@ -1,5 +1,6 @@
 package es.um.tds.gastos.modelo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import es.um.tds.gastos.negocio.EstrategiaCalculoPeriodo;
 import es.um.tds.gastos.negocio.EstrategiaSemanal;
 import es.um.tds.gastos.negocio.EstrategiaMensual;
@@ -12,6 +13,7 @@ import es.um.tds.gastos.negocio.EstrategiaMensual;
  * @author TDS - GestionGastos
  * @version 1.0
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Alerta {
 
     private int id;
