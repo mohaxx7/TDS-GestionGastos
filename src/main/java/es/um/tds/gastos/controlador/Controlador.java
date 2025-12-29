@@ -162,6 +162,13 @@ public class Controlador {
     }
 
     /**
+     * Verifica manualmente todas las alertas con los gastos actuales.
+     */
+    public void verificarAlertas() {
+        gestorAlertas.verificarAlertas(gestorGastos.obtenerTodosLosGastos());
+    }
+
+    /**
      * Activa una alerta.
      */
     public void activarAlerta(int idAlerta) {

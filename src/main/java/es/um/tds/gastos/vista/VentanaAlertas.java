@@ -215,7 +215,7 @@ public class VentanaAlertas {
         btnVerificar.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white;");
         btnVerificar.setOnAction(e -> {
             // Verificar alertas con los gastos actuales
-            controlador.obtenerTodosLosGastos(); // Fuerza la verificacion
+            controlador.verificarAlertas();
             actualizarListas();
         });
 
