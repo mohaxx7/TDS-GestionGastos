@@ -341,7 +341,16 @@ public class VentanaPrincipal extends Application {
             }
         });
 
-        HBox botonesTabla = new HBox(8, btnEliminar, btnImportar, btnAlertas, btnCompartidas, btnBorrarTodos, lblTotal);
+        // Boton grafico
+        Button btnGrafico = new Button("Gráfico");
+        btnGrafico.setStyle("-fx-background-color: #009688; -fx-text-fill: white;");
+        btnGrafico.setOnAction(e -> {
+            VentanaGrafico ventana = new VentanaGrafico();
+            ventana.mostrar();
+        });
+
+        HBox botonesTabla = new HBox(8, btnEliminar, btnImportar, btnAlertas, btnCompartidas, btnBorrarTodos,
+                btnGrafico, lblTotal);
 
         VBox panel = new VBox(10, titulo, tablaGastos, botonesTabla, lblMensajeImport);
         panel.setPadding(new Insets(10));
