@@ -318,7 +318,30 @@ public class VentanaPrincipal extends Application {
             ventanaAlertas.mostrar();
         });
 
-        HBox botonesTabla = new HBox(10, btnEliminar, btnImportar, btnAlertas, lblTotal);
+        // Boton cuentas compartidas
+        Button btnCompartidas = new Button("Compartidas");
+        btnCompartidas.setStyle("-fx-background-color: #673AB7; -fx-text-fill: white;");
+        btnCompartidas.setOnAction(e -> {
+            VentanaCuentasCompartidas ventana = new VentanaCuentasCompartidas();
+            ventana.mostrar();
+        });
+
+        // Boton borrar todos
+        Button btnBorrarTodos = new Button("Borrar Todos");
+        btnBorrarTodos.setStyle("-fx-background-color: #212121; -fx-text-fill: white;");
+        btnBorrarTodos.setOnAction(e -> {
+            // Pedir confirmacion
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirmar");
+            alert.setHeaderText("¿Borrar TODOS los gastos?");
+            alert.setContentText("Esta acción no se puede deshacer.");
+            if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+                controlador.eliminarTodosLosGastos();
+                actualizarTabla();
+            }
+        });
+
+        HBox botonesTabla = new HBox(8, btnEliminar, btnImportar, btnAlertas, btnCompartidas, btnBorrarTodos, lblTotal);
 
         VBox panel = new VBox(10, titulo, tablaGastos, botonesTabla, lblMensajeImport);
         panel.setPadding(new Insets(10));
