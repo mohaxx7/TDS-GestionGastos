@@ -359,8 +359,16 @@ public class VentanaPrincipal extends Application {
             ventana.mostrar();
         });
 
+        // Boton grafico circular (PieChart)
+        Button btnPieChart = new Button("Circular");
+        btnPieChart.setStyle("-fx-background-color: #E91E63; -fx-text-fill: white;");
+        btnPieChart.setOnAction(e -> {
+            VentanaGraficoCircular ventana = new VentanaGraficoCircular();
+            ventana.show();
+        });
+
         HBox botonesTabla = new HBox(8, btnEliminar, btnEditar, btnImportar, btnAlertas, btnCompartidas, btnBorrarTodos,
-                btnGrafico, lblTotal);
+                btnGrafico, btnPieChart, lblTotal);
 
         VBox panel = new VBox(10, titulo, tablaGastos, botonesTabla, lblMensajeImport);
         panel.setPadding(new Insets(10));
@@ -452,6 +460,37 @@ public class VentanaPrincipal extends Application {
 
         dialog.showAndWait();
         actualizarTabla();
+    }
+
+    /**
+     * Exporta los gastos actuales a un archivo PDF.
+     */
+    private void exportarPDF() {
+        javafx.stage.FileChooser fileChooser = new javafx.stage.FileChooser();
+        fileChooser.setTitle("Guardar PDF");
+        fileChooser.getExtensionFilters().add(
+                new javafx.stage.FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+        fileChooser.setInitialFileName("gastos.pdf");
+
+        java.io.File file = fileChooser.showSaveDialog(null);
+        if (file != null) {
+            try {
+                es.um.tds.gastos.servicios.GeneradorPDF generador = new es.um.tds.gastos.servicios.GeneradorPDF();
+                generador.generarPDF(controlador.obtenerTodosLosGastos(), file.getAbsolutePath());
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Éxito");
+                alert.setHeaderText(null);
+                alert.setContentText("PDF exportado correctamente en:\n" + file.getAbsolutePath());
+                alert.showAndWait();
+            } catch (Exception ex) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Error al exportar PDF");
+                alert.setContentText(ex.getMessage());
+                alert.showAndWait();
+            }
+        }
     }
 
     public static void main(String[] args) {
