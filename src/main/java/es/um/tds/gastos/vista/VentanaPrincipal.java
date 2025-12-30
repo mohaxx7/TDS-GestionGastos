@@ -212,6 +212,65 @@ public class VentanaPrincipal extends Application {
     }
 
     /**
+     * Crea el panel con estadisticas resumen de los gastos.
+     */
+    private VBox crearPanelEstadisticas() {
+        Label titulo = new Label("Estadísticas");
+        titulo.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+
+        Label lblTotal = new Label("Total: 0.00 €");
+        lblTotal.setStyle("-fx-font-size: 14px;");
+
+        Label lblMedia = new Label("Media: 0.00 €");
+        lblMedia.setStyle("-fx-font-size: 14px;");
+
+        Label lblCategoriaTop = new Label("Categoría top: -");
+        lblCategoriaTop.setStyle("-fx-font-size: 14px;");
+
+        Label lblNumGastos = new Label("Nº gastos: 0");
+        lblNumGastos.setStyle("-fx-font-size: 14px;");
+
+        // Boton para actualizar estadisticas
+        Button btnActualizar = new Button("Actualizar");
+        btnActualizar.setStyle("-fx-background-color: #607D8B; -fx-text-fill: white;");
+        btnActualizar.setOnAction(e -> {
+            java.util.List<Gasto> gastos = controlador.obtenerTodosLosGastos();
+            if (!gastos.isEmpty()) {
+                double total = gastos.stream().mapToDouble(Gasto::getCantidad).sum();
+                double media = total / gastos.size();
+
+                // Encontrar categoria con mas gasto
+                java.util.Map<String, Double> porCategoria = new java.util.HashMap<>();
+                for (Gasto g : gastos) {
+                    String cat = g.getCategoria().getNombre();
+                    porCategoria.put(cat, porCategoria.getOrDefault(cat, 0.0) + g.getCantidad());
+                }
+                String catTop = porCategoria.entrySet().stream()
+                        .max(java.util.Map.Entry.comparingByValue())
+                        .map(java.util.Map.Entry::getKey)
+                        .orElse("-");
+
+                lblTotal.setText(String.format("Total: %.2f €", total));
+                lblMedia.setText(String.format("Media: %.2f €", media));
+                lblCategoriaTop.setText("Categoría top: " + catTop);
+                lblNumGastos.setText("Nº gastos: " + gastos.size());
+            } else {
+                lblTotal.setText("Total: 0.00 €");
+                lblMedia.setText("Media: 0.00 €");
+                lblCategoriaTop.setText("Categoría top: -");
+                lblNumGastos.setText("Nº gastos: 0");
+            }
+        });
+
+        VBox panel = new VBox(8, titulo, lblTotal, lblMedia, lblCategoriaTop, lblNumGastos, btnActualizar);
+        panel.setPadding(new Insets(10));
+        panel.setStyle("-fx-border-color: #ccc; -fx-border-radius: 5; -fx-background-color: #f5f5f5;");
+        panel.setPrefWidth(300);
+
+        return panel;
+    }
+
+    /**
      * Aplica los filtros seleccionados a la lista de gastos.
      */
     private void aplicarFiltros(Categoria categoria, java.time.LocalDate desde, java.time.LocalDate hasta) {
@@ -367,8 +426,15 @@ public class VentanaPrincipal extends Application {
             ventana.show();
         });
 
+        // Boton exportar PDF
+        Button btnExportarPDF = new Button("PDF");
+        btnExportarPDF.setStyle("-fx-background-color: #795548; -fx-text-fill: white;");
+        btnExportarPDF.setOnAction(e -> {
+            exportarPDF();
+        });
+
         HBox botonesTabla = new HBox(8, btnEliminar, btnEditar, btnImportar, btnAlertas, btnCompartidas, btnBorrarTodos,
-                btnGrafico, btnPieChart, lblTotal);
+                btnGrafico, btnPieChart, btnExportarPDF, lblTotal);
 
         VBox panel = new VBox(10, titulo, tablaGastos, botonesTabla, lblMensajeImport);
         panel.setPadding(new Insets(10));
