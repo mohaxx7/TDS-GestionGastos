@@ -23,7 +23,8 @@ public class GastosCLI {
     public GastosCLI() {
         this.controlador = Controlador.getInstance();
         this.scanner = new Scanner(System.in);
-        this.dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        // Patrón d/M/yyyy acepta tanto "1/1/2001" como "01/01/2001"
+        this.dateFormatter = DateTimeFormatter.ofPattern("d/M/yyyy");
     }
 
     public void iniciar() {
@@ -58,7 +59,7 @@ public class GastosCLI {
     private void registrarGasto() {
         System.out.println("\n--- Registrar Gasto ---");
         double cantidad = leerDouble("Cantidad (€): ");
-        String fechaStr = leerTexto("Fecha (dd/MM/yyyy): ");
+        String fechaStr = leerTexto("Fecha (d/M/yyyy, ej: 1/1/2001): ");
         LocalDate fecha = LocalDate.parse(fechaStr, dateFormatter);
         String descripcion = leerTexto("Descripción: ");
 
@@ -93,7 +94,7 @@ public class GastosCLI {
         listarGastos();
         int id = leerEntero("ID del gasto a editar: ");
         double cantidad = leerDouble("Nueva cantidad: ");
-        String fechaStr = leerTexto("Nueva fecha (dd/MM/yyyy): ");
+        String fechaStr = leerTexto("Nueva fecha (d/M/yyyy): ");
         LocalDate fecha = LocalDate.parse(fechaStr, dateFormatter);
         String descripcion = leerTexto("Nueva descripción: ");
 
