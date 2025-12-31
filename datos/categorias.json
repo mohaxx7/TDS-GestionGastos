@@ -1,0 +1,25 @@
+[ {
+  "id" : 1,
+  "nombre" : "Alimentación"
+}, {
+  "id" : 2,
+  "nombre" : "Transporte"
+}, {
+  "id" : 3,
+  "nombre" : "Vivienda"
+}, {
+  "id" : 4,
+  "nombre" : "Ocio"
+}, {
+  "id" : 5,
+  "nombre" : "Salud"
+}, {
+  "id" : 6,
+  "nombre" : "Educación"
+}, {
+  "id" : 7,
+  "nombre" : "Ropa"
+}, {
+  "id" : 8,
+  "nombre" : "Otros"
+} ]

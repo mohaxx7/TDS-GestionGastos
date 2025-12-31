@@ -182,6 +182,13 @@ public class Controlador {
     }
 
     /**
+     * Obtiene todas las notificaciones (historial completo).
+     */
+    public List<Notificacion> obtenerTodasLasNotificaciones() {
+        return gestorAlertas.obtenerTodasLasNotificaciones();
+    }
+
+    /**
      * Marca una notificacion como leida.
      */
     public void marcarNotificacionComoLeida(int idNotificacion) {
@@ -193,5 +200,59 @@ public class Controlador {
      */
     public void marcarTodasLasNotificacionesComoLeidas() {
         gestorAlertas.marcarTodasLasNotificacionesComoLeidas();
+    }
+
+    /**
+     * Elimina todos los gastos del sistema.
+     */
+    public void eliminarTodosLosGastos() {
+        List<Gasto> gastos = gestorGastos.obtenerTodosLosGastos();
+        for (Gasto gasto : gastos) {
+            gestorGastos.eliminarGasto(gasto.getId());
+        }
+    }
+
+    /**
+     * Verifica manualmente todas las alertas con los gastos actuales.
+     */
+    public void verificarAlertas() {
+        gestorAlertas.verificarAlertas(gestorGastos.obtenerTodosLosGastos());
+    }
+
+    /**
+     * Importa gastos desde un archivo externo.
+     */
+    public int importarGastos(String rutaArchivo) {
+        try {
+            es.um.tds.gastos.importador.FactoriaAdaptadores factoria = es.um.tds.gastos.importador.FactoriaAdaptadores
+                    .getInstance();
+            es.um.tds.gastos.importador.AdaptadorImportacion adaptador = factoria.crearAdaptador(rutaArchivo);
+            java.util.List<Gasto> gastosImportados = adaptador.importarGastos(rutaArchivo);
+
+            for (Gasto gasto : gastosImportados) {
+                gestorGastos.registrarGasto(gasto.getCantidad(), gasto.getFecha(),
+                        gasto.getDescripcion(), gasto.getCategoria());
+            }
+            gestorAlertas.verificarAlertas(gestorGastos.obtenerTodosLosGastos());
+            return gastosImportados.size();
+        } catch (Exception e) {
+            System.err.println("Error importando: " + e.getMessage());
+            return 0;
+        }
+    }
+
+    // CUENTAS COMPARTIDAS
+    private es.um.tds.gastos.persistencia.RepositorioCuentasCompartidasJSON repoCuentas = new es.um.tds.gastos.persistencia.RepositorioCuentasCompartidasJSON();
+
+    public es.um.tds.gastos.modelo.CuentaCompartida crearCuentaCompartida(
+            String nombre, java.util.List<es.um.tds.gastos.modelo.PersonaCuenta> personas) {
+        es.um.tds.gastos.modelo.CuentaCompartida cuenta = new es.um.tds.gastos.modelo.CuentaCompartida(nombre,
+                personas);
+        repoCuentas.guardar(cuenta);
+        return cuenta;
+    }
+
+    public java.util.List<es.um.tds.gastos.modelo.CuentaCompartida> obtenerCuentasCompartidas() {
+        return repoCuentas.obtenerTodas();
     }
 }

@@ -1,0 +1,30 @@
+Date,Account,Category,Subcategory,Note,Payer,Amount,Currency
+12/28/2025 10:11,Personal,con tarjeta,Alimentación,Desayuno en cafetería,Me,4.50,EUR
+12/28/2025 10:11,Compartida 1,efectivo,Transporte,Billetes de metro,Anthony,6.00,EUR
+12/27/2025 19:50,Compartida 2,on line,Ocio,Alquiler de película en streaming,Me,3.99,EUR
+12/27/2025 18:56,Personal,con tarjeta,Transporte,Repostaje en gasolinera,Me,45.00,EUR
+12/27/2025 18:22,Compartida 1,con tarjeta,Alimentación,Pizza para cenar,Stephani,18.50,EUR
+12/27/2025 18:22,Compartida 2,efectivo,Ocio,Partida de billar en bar,Bob,12.00,EUR
+12/26/2025 18:21,Personal,efectivo,Transporte,Billete de autobús urbano,Me,1.50,EUR
+12/26/2025 11:56,Compartida 1,on line,Otros,Compra de taza personalizada,Mark,9.90,EUR
+12/26/2025 11:45,Compartida 2,con tarjeta,Alimentación,Compra en supermercado,Greta,32.40,EUR
+12/25/2025 15:29,Personal,con paypal,Ocio,Juego para móvil,Me,2.99,EUR
+12/25/2025 20:16,Compartida 2,con tarjeta,Alimentación,Cena de hamburguesas,Paco,21.00,EUR
+12/24/2025 17:37,Compartida 1,efectivo,Transporte,Repostaje coche compartido,Anthony,30.00,EUR
+12/24/2025 17:37,Personal,con tarjeta,Otros,Cambio de bombilla del coche,Me,7.50,EUR
+12/24/2025 16:01,Compartida 2,on line,Transporte,Recarga tarjeta de transporte,Betty,20.00,EUR
+12/23/2025 14:07,Personal,efectivo,Alimentación,Bocadillo y refresco,Me,5.25,EUR
+12/23/2025 1:39,Compartida 1,con tarjeta,Ocio,Cerveza en pub,Mark,6.00,EUR
+12/22/2025 12:08,Personal,on line,Salud,Compra de vitaminas,Me,12.75,EUR
+12/22/2025 22:32,Compartida 2,con paypal,Ocio,Compra de música digital,Bob,4.99,EUR
+12/21/2025 22:21,Compartida 1,con tarjeta,Alimentación,Cena en restaurante,Stephani,28.00,EUR
+12/21/2025 19:15,Personal,efectivo,Transporte,Taxi nocturno,Me,11.00,EUR
+12/20/2025 17:35,Compartida 2,con tarjeta,Otros,Compra de tarjeta regalo,Greta,15.00,EUR
+12/20/2025 16:06,Compartida 1,on line,Alimentación,Pedido de sushi a domicilio,Anthony,24.60,EUR
+12/19/2025 12:38,Personal,con tarjeta,Transporte,Repostaje rápido,Me,20.00,EUR
+12/19/2025 6:33,Compartida 2,efectivo,Transporte,Billete de tren,Bob,14.50,EUR
+12/18/2025 22:15,Personal,con paypal,Ocio,Alquiler de videojuego,Me,5.99,EUR
+12/18/2025 16:06,Compartida 1,con tarjeta,Otros,Compra de herramientas básicas,Mark,19.80,EUR
+12/17/2025 15:40,Compartida 2,on line,Salud,Compra de termómetro digital,Betty,8.40,EUR
+12/17/2025 15:38,Personal,efectivo,Alimentación,Café y bollería,Me,3.20,EUR
+12/16/2025 15:24,Compartida 1,con tarjeta,Ocio,Entradas para el cine,Stephani,16.00,EUR

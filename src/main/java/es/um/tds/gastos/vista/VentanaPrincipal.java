@@ -44,11 +44,13 @@ public class VentanaPrincipal extends Application {
         // Panel derecho: Tabla de gastos
         VBox panelTabla = crearPanelTabla();
 
-        // Layout principal
+        // Layout principal - hacer que la tabla se expanda
         HBox root = new HBox(20, panelIzquierdo, panelTabla);
         root.setPadding(new Insets(20));
+        HBox.setHgrow(panelTabla, javafx.scene.layout.Priority.ALWAYS);
+        VBox.setVgrow(tablaGastos, javafx.scene.layout.Priority.ALWAYS);
 
-        Scene scene = new Scene(root, 950, 600);
+        Scene scene = new Scene(root, 1200, 700);
         stage.setTitle("Gestion de Gastos - TDS");
         stage.setScene(scene);
         stage.show();
@@ -416,7 +418,6 @@ public class VentanaPrincipal extends Application {
 
         // Boton eliminar
         Button btnEliminar = new Button("Eliminar seleccionado");
-        btnEliminar.setStyle("-fx-background-color: #f44336; -fx-text-fill: white;");
         btnEliminar.setOnAction(e -> {
             Gasto seleccionado = tablaGastos.getSelectionModel().getSelectedItem();
             if (seleccionado != null) {
@@ -438,7 +439,6 @@ public class VentanaPrincipal extends Application {
 
         // Boton editar
         Button btnEditar = new Button("Editar");
-        btnEditar.setStyle("-fx-background-color: #FF9800; -fx-text-fill: white;");
         btnEditar.setOnAction(e -> {
             Gasto seleccionado = tablaGastos.getSelectionModel().getSelectedItem();
             if (seleccionado != null) {
@@ -448,7 +448,6 @@ public class VentanaPrincipal extends Application {
 
         // Boton importar CSV
         Button btnImportar = new Button("Importar CSV");
-        btnImportar.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white;");
         Label lblMensajeImport = new Label();
         btnImportar.setOnAction(e -> {
             javafx.stage.FileChooser fileChooser = new javafx.stage.FileChooser();
@@ -470,7 +469,6 @@ public class VentanaPrincipal extends Application {
 
         // Boton alertas
         Button btnAlertas = new Button("Alertas");
-        btnAlertas.setStyle("-fx-background-color: #FF9800; -fx-text-fill: white;");
         btnAlertas.setOnAction(e -> {
             VentanaAlertas ventanaAlertas = new VentanaAlertas();
             ventanaAlertas.mostrar();
@@ -478,7 +476,6 @@ public class VentanaPrincipal extends Application {
 
         // Boton cuentas compartidas
         Button btnCompartidas = new Button("Compartidas");
-        btnCompartidas.setStyle("-fx-background-color: #673AB7; -fx-text-fill: white;");
         btnCompartidas.setOnAction(e -> {
             VentanaCuentasCompartidas ventana = new VentanaCuentasCompartidas();
             ventana.mostrar();
@@ -486,7 +483,6 @@ public class VentanaPrincipal extends Application {
 
         // Boton borrar todos
         Button btnBorrarTodos = new Button("Borrar Todos");
-        btnBorrarTodos.setStyle("-fx-background-color: #212121; -fx-text-fill: white;");
         btnBorrarTodos.setOnAction(e -> {
             // Pedir confirmacion
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -501,7 +497,6 @@ public class VentanaPrincipal extends Application {
 
         // Boton grafico
         Button btnGrafico = new Button("Gráfico");
-        btnGrafico.setStyle("-fx-background-color: #009688; -fx-text-fill: white;");
         btnGrafico.setOnAction(e -> {
             VentanaGrafico ventana = new VentanaGrafico();
             ventana.mostrar();
@@ -509,7 +504,6 @@ public class VentanaPrincipal extends Application {
 
         // Boton grafico circular (PieChart)
         Button btnPieChart = new Button("Circular");
-        btnPieChart.setStyle("-fx-background-color: #E91E63; -fx-text-fill: white;");
         btnPieChart.setOnAction(e -> {
             VentanaGraficoCircular ventana = new VentanaGraficoCircular();
             ventana.show();
@@ -517,14 +511,12 @@ public class VentanaPrincipal extends Application {
 
         // Boton exportar PDF
         Button btnExportarPDF = new Button("PDF");
-        btnExportarPDF.setStyle("-fx-background-color: #795548; -fx-text-fill: white;");
         btnExportarPDF.setOnAction(e -> {
             exportarPDF();
         });
 
         // Boton calendario
         Button btnCalendario = new Button("Calendario");
-        btnCalendario.setStyle("-fx-background-color: #3F51B5; -fx-text-fill: white;");
         btnCalendario.setOnAction(e -> {
             VentanaCalendario ventana = new VentanaCalendario();
             ventana.mostrar();

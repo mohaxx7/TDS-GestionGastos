@@ -1,0 +1,30 @@
+[ {
+  "id" : 1,
+  "nombre" : "Casa",
+  "personas" : [ {
+    "id" : 0,
+    "nombre" : "andres",
+    "email" : "",
+    "porcentajeGasto" : 25.0,
+    "saldoPendiente" : 0.0
+  }, {
+    "id" : 0,
+    "nombre" : "moha",
+    "email" : "",
+    "porcentajeGasto" : 25.0,
+    "saldoPendiente" : 0.0
+  }, {
+    "id" : 0,
+    "nombre" : "pedro",
+    "email" : "",
+    "porcentajeGasto" : 25.0,
+    "saldoPendiente" : 0.0
+  }, {
+    "id" : 0,
+    "nombre" : "jalil",
+    "email" : "",
+    "porcentajeGasto" : 25.0,
+    "saldoPendiente" : 0.0
+  } ],
+  "gastos" : [ ]
+} ]
