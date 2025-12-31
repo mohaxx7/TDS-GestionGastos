@@ -92,16 +92,6 @@ public class Controlador {
     }
 
     /**
-     * Elimina todos los gastos del sistema.
-     */
-    public void eliminarTodosLosGastos() {
-        List<Gasto> gastos = gestorGastos.obtenerTodosLosGastos();
-        for (Gasto gasto : gastos) {
-            gestorGastos.eliminarGasto(gasto.getId());
-        }
-    }
-
-    /**
      * Filtra gastos por rango de fechas.
      */
     public List<Gasto> filtrarGastosPorFechas(LocalDate fechaInicio, LocalDate fechaFin) {
@@ -162,13 +152,6 @@ public class Controlador {
     }
 
     /**
-     * Verifica manualmente todas las alertas con los gastos actuales.
-     */
-    public void verificarAlertas() {
-        gestorAlertas.verificarAlertas(gestorGastos.obtenerTodosLosGastos());
-    }
-
-    /**
      * Activa una alerta.
      */
     public void activarAlerta(int idAlerta) {
@@ -199,6 +182,13 @@ public class Controlador {
     }
 
     /**
+     * Obtiene todas las notificaciones (historial completo).
+     */
+    public List<Notificacion> obtenerTodasLasNotificaciones() {
+        return gestorAlertas.obtenerTodasLasNotificaciones();
+    }
+
+    /**
      * Marca una notificacion como leida.
      */
     public void marcarNotificacionComoLeida(int idNotificacion) {
@@ -212,34 +202,38 @@ public class Controlador {
         gestorAlertas.marcarTodasLasNotificacionesComoLeidas();
     }
 
-    // OPERACIONES DE IMPORTACION
+    /**
+     * Elimina todos los gastos del sistema.
+     */
+    public void eliminarTodosLosGastos() {
+        List<Gasto> gastos = gestorGastos.obtenerTodosLosGastos();
+        for (Gasto gasto : gastos) {
+            gestorGastos.eliminarGasto(gasto.getId());
+        }
+    }
+
+    /**
+     * Verifica manualmente todas las alertas con los gastos actuales.
+     */
+    public void verificarAlertas() {
+        gestorAlertas.verificarAlertas(gestorGastos.obtenerTodosLosGastos());
+    }
 
     /**
      * Importa gastos desde un archivo externo.
-     * Usa el patron Factory Method para crear el adaptador adecuado.
-     * 
-     * @param rutaArchivo ruta al archivo a importar
-     * @return numero de gastos importados
      */
     public int importarGastos(String rutaArchivo) {
         try {
             es.um.tds.gastos.importador.FactoriaAdaptadores factoria = es.um.tds.gastos.importador.FactoriaAdaptadores
                     .getInstance();
             es.um.tds.gastos.importador.AdaptadorImportacion adaptador = factoria.crearAdaptador(rutaArchivo);
-
             java.util.List<Gasto> gastosImportados = adaptador.importarGastos(rutaArchivo);
 
             for (Gasto gasto : gastosImportados) {
-                gestorGastos.registrarGasto(
-                        gasto.getCantidad(),
-                        gasto.getFecha(),
-                        gasto.getDescripcion(),
-                        gasto.getCategoria());
+                gestorGastos.registrarGasto(gasto.getCantidad(), gasto.getFecha(),
+                        gasto.getDescripcion(), gasto.getCategoria());
             }
-
-            // Verificar alertas despues de importar todos los gastos
             gestorAlertas.verificarAlertas(gestorGastos.obtenerTodosLosGastos());
-
             return gastosImportados.size();
         } catch (Exception e) {
             System.err.println("Error importando: " + e.getMessage());
@@ -247,13 +241,9 @@ public class Controlador {
         }
     }
 
-    // OPERACIONES DE CUENTAS COMPARTIDAS
-
+    // CUENTAS COMPARTIDAS
     private es.um.tds.gastos.persistencia.RepositorioCuentasCompartidasJSON repoCuentas = new es.um.tds.gastos.persistencia.RepositorioCuentasCompartidasJSON();
 
-    /**
-     * Crea una nueva cuenta compartida.
-     */
     public es.um.tds.gastos.modelo.CuentaCompartida crearCuentaCompartida(
             String nombre, java.util.List<es.um.tds.gastos.modelo.PersonaCuenta> personas) {
         es.um.tds.gastos.modelo.CuentaCompartida cuenta = new es.um.tds.gastos.modelo.CuentaCompartida(nombre,
@@ -262,21 +252,7 @@ public class Controlador {
         return cuenta;
     }
 
-    /**
-     * Obtiene todas las cuentas compartidas.
-     */
     public java.util.List<es.um.tds.gastos.modelo.CuentaCompartida> obtenerCuentasCompartidas() {
         return repoCuentas.obtenerTodas();
-    }
-
-    /**
-     * Registra un gasto en una cuenta compartida.
-     */
-    public void registrarGastoCompartido(es.um.tds.gastos.modelo.CuentaCompartida cuenta,
-            double cantidad, java.time.LocalDate fecha, String descripcion,
-            Categoria categoria, es.um.tds.gastos.modelo.PersonaCuenta pagador) {
-        Gasto gasto = gestorGastos.registrarGasto(cantidad, fecha, descripcion, categoria);
-        cuenta.registrarGasto(gasto, pagador);
-        repoCuentas.actualizar(cuenta); // Guardar cambios
     }
 }

@@ -26,6 +26,7 @@ public class VentanaAlertas {
     private ListView<Alerta> listaAlertas;
     private ListView<Notificacion> listaNotificaciones;
     private Stage stage;
+    private boolean mostrarHistorialCompleto = false;
 
     public VentanaAlertas() {
         this.controlador = Controlador.getInstance();
@@ -225,9 +226,16 @@ public class VentanaAlertas {
             actualizarListas();
         });
 
+        // Checkbox para historial completo
+        javafx.scene.control.CheckBox chkHistorial = new javafx.scene.control.CheckBox("Ver historial completo");
+        chkHistorial.setOnAction(e -> {
+            mostrarHistorialCompleto = chkHistorial.isSelected();
+            actualizarListas();
+        });
+
         HBox botones = new HBox(10, btnVerificar, btnMarcarLeidas);
 
-        VBox panel = new VBox(10, titulo, listaNotificaciones, botones);
+        VBox panel = new VBox(10, titulo, chkHistorial, listaNotificaciones, botones);
         panel.setPadding(new Insets(10));
         panel.setStyle("-fx-border-color: #ccc; -fx-border-radius: 5;");
         panel.setPrefWidth(300);
@@ -243,6 +251,10 @@ public class VentanaAlertas {
         listaAlertas.getItems().addAll(controlador.obtenerTodasLasAlertas());
 
         listaNotificaciones.getItems().clear();
-        listaNotificaciones.getItems().addAll(controlador.obtenerNotificacionesNoLeidas());
+        if (mostrarHistorialCompleto) {
+            listaNotificaciones.getItems().addAll(controlador.obtenerTodasLasNotificaciones());
+        } else {
+            listaNotificaciones.getItems().addAll(controlador.obtenerNotificacionesNoLeidas());
+        }
     }
 }

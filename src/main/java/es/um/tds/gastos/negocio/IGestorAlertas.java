@@ -13,22 +13,33 @@ import java.util.List;
  * @version 1.0
  */
 public interface IGestorAlertas {
-    
+
     // Gestión de alertas
     Alerta crearAlerta(TipoAlerta tipo, double limiteGasto);
+
     Alerta crearAlerta(TipoAlerta tipo, double limiteGasto, Categoria categoria);
+
     void modificarAlerta(int idAlerta, double nuevoLimite);
+
     void activarAlerta(int idAlerta);
+
     void desactivarAlerta(int idAlerta);
+
     void eliminarAlerta(int idAlerta);
+
     List<Alerta> obtenerTodasLasAlertas();
+
     List<Alerta> obtenerAlertasActivas();
-    
+
     // Gestión de notificaciones
     List<Notificacion> obtenerNotificacionesNoLeidas();
+
+    List<Notificacion> obtenerTodasLasNotificaciones();
+
     void marcarNotificacionComoLeida(int idNotificacion);
+
     void marcarTodasLasNotificacionesComoLeidas();
-    
+
     // Verificación de alertas
     void verificarAlertas(List<es.um.tds.gastos.modelo.Gasto> gastos);
 }

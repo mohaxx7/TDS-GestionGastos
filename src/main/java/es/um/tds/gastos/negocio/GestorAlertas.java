@@ -123,6 +123,11 @@ public class GestorAlertas implements IGestorAlertas {
     }
 
     @Override
+    public List<Notificacion> obtenerTodasLasNotificaciones() {
+        return repositorio.obtenerTodasLasNotificaciones();
+    }
+
+    @Override
     public void marcarNotificacionComoLeida(int idNotificacion) {
         Notificacion notificacion = repositorio.buscarNotificacionPorId(idNotificacion);
         if (notificacion == null) {
