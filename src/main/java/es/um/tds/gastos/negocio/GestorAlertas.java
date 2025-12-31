@@ -7,7 +7,7 @@ import es.um.tds.gastos.modelo.Notificacion;
 import es.um.tds.gastos.modelo.TipoAlerta;
 import es.um.tds.gastos.persistencia.IRepositorioAlertas;
 import es.um.tds.gastos.persistencia.RepositorioAlertasJSON;
-import es.um.tds.gastos.util.FiltroGastos;
+import es.um.tds.gastos.negocio.FiltroGastos;
 import java.time.LocalDate;
 import java.util.List;
 

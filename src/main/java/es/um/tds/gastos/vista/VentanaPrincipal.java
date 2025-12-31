@@ -177,6 +177,16 @@ public class VentanaPrincipal extends Application {
         DatePicker dateHasta = new DatePicker();
         dateHasta.setPromptText("Fecha fin");
 
+        // Filtro por meses específicos
+        Label lblMeses = new Label("Filtrar por meses:");
+        ListView<String> listaMeses = new ListView<>();
+        listaMeses.getItems().addAll(
+                "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+        listaMeses.getSelectionModel().setSelectionMode(javafx.scene.control.SelectionMode.MULTIPLE);
+        listaMeses.setPrefHeight(80);
+        listaMeses.setStyle("-fx-font-size: 11px;");
+
         // Botones
         Button btnFiltrar = new Button("Aplicar Filtros");
         btnFiltrar.setStyle("-fx-background-color: #9C27B0; -fx-text-fill: white;");
@@ -186,6 +196,7 @@ public class VentanaPrincipal extends Application {
             comboFiltroCategoria.setValue(null);
             dateDesde.setValue(null);
             dateHasta.setValue(null);
+            listaMeses.getSelectionModel().clearSelection();
             actualizarTabla();
         });
 
@@ -193,7 +204,8 @@ public class VentanaPrincipal extends Application {
             aplicarFiltros(
                     comboFiltroCategoria.getValue(),
                     dateDesde.getValue(),
-                    dateHasta.getValue());
+                    dateHasta.getValue(),
+                    listaMeses.getSelectionModel().getSelectedItems());
         });
 
         HBox botonesBox = new HBox(10, btnFiltrar, btnLimpiar);
@@ -201,6 +213,7 @@ public class VentanaPrincipal extends Application {
         VBox panel = new VBox(8,
                 titulo,
                 lblCategoria, comboFiltroCategoria,
+                lblMeses, listaMeses,
                 lblDesde, dateDesde,
                 lblHasta, dateHasta,
                 botonesBox);
@@ -273,13 +286,31 @@ public class VentanaPrincipal extends Application {
     /**
      * Aplica los filtros seleccionados a la lista de gastos.
      */
-    private void aplicarFiltros(Categoria categoria, java.time.LocalDate desde, java.time.LocalDate hasta) {
+    private void aplicarFiltros(Categoria categoria, java.time.LocalDate desde,
+            java.time.LocalDate hasta, java.util.List<String> mesesSeleccionados) {
         java.util.List<Gasto> gastosFiltrados = controlador.obtenerTodosLosGastos();
 
         // Filtrar por categoria
         if (categoria != null) {
             gastosFiltrados = gastosFiltrados.stream()
                     .filter(g -> g.getCategoria().getNombre().equals(categoria.getNombre()))
+                    .collect(java.util.stream.Collectors.toList());
+        }
+
+        // Filtrar por meses específicos
+        if (mesesSeleccionados != null && !mesesSeleccionados.isEmpty()) {
+            java.util.List<Integer> numerosMeses = new java.util.ArrayList<>();
+            String[] nombresMeses = { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" };
+            for (String mes : mesesSeleccionados) {
+                for (int i = 0; i < nombresMeses.length; i++) {
+                    if (nombresMeses[i].equals(mes)) {
+                        numerosMeses.add(i + 1); // Enero = 1, etc.
+                    }
+                }
+            }
+            gastosFiltrados = gastosFiltrados.stream()
+                    .filter(g -> numerosMeses.contains(g.getFecha().getMonthValue()))
                     .collect(java.util.stream.Collectors.toList());
         }
 
