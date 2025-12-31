@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * Ventana para gestionar cuentas compartidas.
- * Permite crear cuentas, añadir personas y ver saldos.
+ * Permite crear cuentas, añadir personas, registrar gastos y ver saldos.
  * 
  * @author TDS - GestionGastos
  * @version 1.0
@@ -24,7 +24,11 @@ public class VentanaCuentasCompartidas {
     private ListView<CuentaCompartida> listaCuentas;
     private ListView<String> listaPersonas;
     private ListView<String> listaSaldos;
+    private ListView<String> listaGastosCuenta;
     private Stage stage;
+    private Label lblTotal;
+    private ComboBox<PersonaCuenta> comboPagador;
+    private CuentaCompartida cuentaSeleccionada;
 
     public VentanaCuentasCompartidas() {
         this.controlador = Controlador.getInstance();
@@ -48,7 +52,7 @@ public class VentanaCuentasCompartidas {
         HBox root = new HBox(15, panelCrear, panelCuentas, panelDetalles);
         root.setPadding(new Insets(15));
 
-        Scene scene = new Scene(root, 950, 500);
+        Scene scene = new Scene(root, 1050, 600);
         stage.setTitle("Cuentas Compartidas");
         stage.setScene(scene);
         stage.show();
@@ -157,7 +161,10 @@ public class VentanaCuentasCompartidas {
 
         // Al seleccionar una cuenta, mostrar detalles
         listaCuentas.getSelectionModel().selectedItemProperty().addListener(
-                (obs, oldVal, newVal) -> mostrarDetallesCuenta(newVal));
+                (obs, oldVal, newVal) -> {
+                    cuentaSeleccionada = newVal;
+                    mostrarDetallesCuenta(newVal);
+                });
 
         VBox panel = new VBox(10, titulo, listaCuentas);
         panel.setPadding(new Insets(10));
@@ -176,23 +183,113 @@ public class VentanaCuentasCompartidas {
 
         Label lblPersonasTitulo = new Label("Personas:");
         listaPersonas = new ListView<>();
-        listaPersonas.setPrefHeight(120);
+        listaPersonas.setPrefHeight(80);
 
         Label lblSaldosTitulo = new Label("Saldos:");
         listaSaldos = new ListView<>();
-        listaSaldos.setPrefHeight(120);
+        listaSaldos.setPrefHeight(80);
 
-        Label lblTotal = new Label("Total gastado: 0.00 €");
+        // Formulario para añadir gasto a la cuenta
+        Label lblNuevoGasto = new Label("Añadir Gasto:");
+        lblNuevoGasto.setStyle("-fx-font-weight: bold;");
+
+        Label lblCantidad = new Label("Cantidad:");
+        TextField txtCantidadGasto = new TextField();
+        txtCantidadGasto.setPromptText("0.00");
+
+        Label lblPagador = new Label("Pagado por:");
+        comboPagador = new ComboBox<>();
+        comboPagador.setPromptText("Selecciona quien pagó");
+        comboPagador.setCellFactory(lv -> new ListCell<PersonaCuenta>() {
+            @Override
+            protected void updateItem(PersonaCuenta p, boolean empty) {
+                super.updateItem(p, empty);
+                setText(empty || p == null ? null : p.getNombre());
+            }
+        });
+        comboPagador.setButtonCell(new ListCell<PersonaCuenta>() {
+            @Override
+            protected void updateItem(PersonaCuenta p, boolean empty) {
+                super.updateItem(p, empty);
+                setText(empty || p == null ? null : p.getNombre());
+            }
+        });
+
+        Label lblDescGasto = new Label("Descripción:");
+        TextField txtDescGasto = new TextField();
+        txtDescGasto.setPromptText("Ej: Cena");
+
+        Button btnAnadirGasto = new Button("Añadir Gasto");
+        btnAnadirGasto.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white;");
+        Label lblMensajeGasto = new Label();
+
+        btnAnadirGasto.setOnAction(e -> {
+            if (cuentaSeleccionada == null) {
+                lblMensajeGasto.setText("Selecciona una cuenta");
+                lblMensajeGasto.setStyle("-fx-text-fill: red;");
+                return;
+            }
+
+            PersonaCuenta pagador = comboPagador.getValue();
+            if (pagador == null) {
+                lblMensajeGasto.setText("Selecciona quién pagó");
+                lblMensajeGasto.setStyle("-fx-text-fill: red;");
+                return;
+            }
+
+            try {
+                double cantidad = Double.parseDouble(txtCantidadGasto.getText().trim());
+                if (cantidad <= 0) {
+                    lblMensajeGasto.setText("Cantidad debe ser > 0");
+                    lblMensajeGasto.setStyle("-fx-text-fill: red;");
+                    return;
+                }
+
+                String descripcion = txtDescGasto.getText().trim();
+                if (descripcion.isEmpty())
+                    descripcion = "Gasto compartido";
+
+                // Añadir gasto a la cuenta
+                cuentaSeleccionada.anadirGasto(cantidad, pagador, descripcion);
+
+                lblMensajeGasto.setText("Gasto añadido");
+                lblMensajeGasto.setStyle("-fx-text-fill: green;");
+                txtCantidadGasto.clear();
+                txtDescGasto.clear();
+
+                // Actualizar vista
+                mostrarDetallesCuenta(cuentaSeleccionada);
+
+            } catch (NumberFormatException ex) {
+                lblMensajeGasto.setText("Cantidad no válida");
+                lblMensajeGasto.setStyle("-fx-text-fill: red;");
+            }
+        });
+
+        // Lista de gastos de la cuenta
+        Label lblGastosCuenta = new Label("Gastos de la cuenta:");
+        listaGastosCuenta = new ListView<>();
+        listaGastosCuenta.setPrefHeight(80);
+
+        lblTotal = new Label("Total gastado: 0.00 €");
         lblTotal.setStyle("-fx-font-weight: bold;");
 
-        VBox panel = new VBox(8,
+        VBox panel = new VBox(6,
                 titulo,
                 lblPersonasTitulo, listaPersonas,
                 lblSaldosTitulo, listaSaldos,
+                new Separator(),
+                lblNuevoGasto,
+                lblCantidad, txtCantidadGasto,
+                lblPagador, comboPagador,
+                lblDescGasto, txtDescGasto,
+                btnAnadirGasto, lblMensajeGasto,
+                new Separator(),
+                lblGastosCuenta, listaGastosCuenta,
                 lblTotal);
         panel.setPadding(new Insets(10));
         panel.setStyle("-fx-border-color: #ccc; -fx-border-radius: 5;");
-        panel.setPrefWidth(300);
+        panel.setPrefWidth(350);
 
         return panel;
     }
@@ -203,14 +300,17 @@ public class VentanaCuentasCompartidas {
     private void mostrarDetallesCuenta(CuentaCompartida cuenta) {
         listaPersonas.getItems().clear();
         listaSaldos.getItems().clear();
+        listaGastosCuenta.getItems().clear();
+        comboPagador.getItems().clear();
 
         if (cuenta == null)
             return;
 
-        // Mostrar personas
+        // Mostrar personas y cargar combo
         for (PersonaCuenta persona : cuenta.getPersonas()) {
             listaPersonas.getItems().add(persona.getNombre() +
                     " (" + String.format("%.1f%%", persona.getPorcentajeGasto()) + ")");
+            comboPagador.getItems().add(persona);
         }
 
         // Mostrar saldos
@@ -219,6 +319,16 @@ public class VentanaCuentasCompartidas {
             listaSaldos.getItems().add(String.format("%s: %.2f € (%s)",
                     persona.getNombre(), Math.abs(saldo), estado));
         });
+
+        // Mostrar gastos de la cuenta
+        cuenta.getGastos().forEach(gasto -> {
+            listaGastosCuenta.getItems().add(String.format("%.2f € - %s (pagó: %s)",
+                    gasto.getCantidad(), gasto.getDescripcion(), gasto.getPagador().getNombre()));
+        });
+
+        // Actualizar total
+        double total = cuenta.getGastos().stream().mapToDouble(g -> g.getCantidad()).sum();
+        lblTotal.setText(String.format("Total gastado: %.2f €", total));
     }
 
     /**

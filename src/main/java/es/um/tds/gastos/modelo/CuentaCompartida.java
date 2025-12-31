@@ -135,6 +135,35 @@ public class CuentaCompartida {
             throw new IllegalArgumentException("El pagador debe ser una persona de la cuenta");
         }
 
+        gasto.setPagador(pagador);
+        gastos.add(gasto);
+        actualizarSaldos(gasto, pagador);
+    }
+
+    /**
+     * Añade un gasto nuevo a la cuenta compartida.
+     * Crea el gasto internamente con una categoría por defecto.
+     * 
+     * @param cantidad    cantidad del gasto
+     * @param pagador     persona que pagó
+     * @param descripcion descripción del gasto
+     */
+    public void anadirGasto(double cantidad, PersonaCuenta pagador, String descripcion) {
+        if (cantidad <= 0) {
+            throw new IllegalArgumentException("La cantidad debe ser mayor que 0");
+        }
+        if (pagador == null || !personas.contains(pagador)) {
+            throw new IllegalArgumentException("El pagador debe ser una persona de la cuenta");
+        }
+        if (descripcion == null || descripcion.trim().isEmpty()) {
+            descripcion = "Gasto compartido";
+        }
+
+        // Crear gasto con categoría genérica "Compartido"
+        Categoria catCompartido = new Categoria("Compartido");
+        Gasto gasto = new Gasto(cantidad, java.time.LocalDate.now(), descripcion, catCompartido);
+        gasto.setPagador(pagador);
+
         gastos.add(gasto);
         actualizarSaldos(gasto, pagador);
     }
