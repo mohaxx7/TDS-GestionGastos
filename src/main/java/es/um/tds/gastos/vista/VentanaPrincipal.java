@@ -39,7 +39,7 @@ public class VentanaPrincipal extends Application {
         VBox panelFiltros = crearPanelFiltros();
 
         // Panel izquierdo completo
-        VBox panelIzquierdo = new VBox(20, panelFormulario, panelFiltros);
+        VBox panelIzquierdo = new VBox(20, panelFormulario, panelFiltros, crearPanelEstadisticas());
 
         // Panel derecho: Tabla de gastos
         VBox panelTabla = crearPanelTabla();
