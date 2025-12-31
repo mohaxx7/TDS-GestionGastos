@@ -93,11 +93,43 @@ public class VentanaPrincipal extends Application {
 
         btnAnadir.setOnAction(e -> {
             try {
-                double cantidad = Double.parseDouble(txtCantidad.getText());
-                LocalDate fecha = dateFecha.getValue();
-                String descripcion = txtDescripcion.getText();
-                Categoria categoria = comboCategoria.getValue();
+                // Validar cantidad
+                String cantidadStr = txtCantidad.getText().trim();
+                if (cantidadStr.isEmpty()) {
+                    lblMensaje.setText("La cantidad es obligatoria");
+                    lblMensaje.setStyle("-fx-text-fill: red;");
+                    return;
+                }
+                double cantidad = Double.parseDouble(cantidadStr);
+                if (cantidad <= 0) {
+                    lblMensaje.setText("La cantidad debe ser mayor que 0");
+                    lblMensaje.setStyle("-fx-text-fill: red;");
+                    return;
+                }
 
+                // Validar fecha
+                LocalDate fecha = dateFecha.getValue();
+                if (fecha == null) {
+                    lblMensaje.setText("La fecha es obligatoria");
+                    lblMensaje.setStyle("-fx-text-fill: red;");
+                    return;
+                }
+                if (fecha.isAfter(LocalDate.now())) {
+                    lblMensaje.setText("La fecha no puede ser futura");
+                    lblMensaje.setStyle("-fx-text-fill: red;");
+                    return;
+                }
+
+                // Validar descripcion
+                String descripcion = txtDescripcion.getText().trim();
+                if (descripcion.isEmpty()) {
+                    lblMensaje.setText("La descripcion es obligatoria");
+                    lblMensaje.setStyle("-fx-text-fill: red;");
+                    return;
+                }
+
+                // Validar categoria
+                Categoria categoria = comboCategoria.getValue();
                 if (categoria == null) {
                     lblMensaje.setText("Selecciona una categoria");
                     lblMensaje.setStyle("-fx-text-fill: red;");
@@ -117,7 +149,7 @@ public class VentanaPrincipal extends Application {
                 actualizarTabla();
 
             } catch (NumberFormatException ex) {
-                lblMensaje.setText("Cantidad no valida");
+                lblMensaje.setText("Cantidad no valida (usa numeros)");
                 lblMensaje.setStyle("-fx-text-fill: red;");
             } catch (Exception ex) {
                 lblMensaje.setText("Error: " + ex.getMessage());
