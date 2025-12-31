@@ -522,8 +522,16 @@ public class VentanaPrincipal extends Application {
             exportarPDF();
         });
 
+        // Boton calendario
+        Button btnCalendario = new Button("Calendario");
+        btnCalendario.setStyle("-fx-background-color: #3F51B5; -fx-text-fill: white;");
+        btnCalendario.setOnAction(e -> {
+            VentanaCalendario ventana = new VentanaCalendario();
+            ventana.mostrar();
+        });
+
         HBox botonesTabla = new HBox(8, btnEliminar, btnEditar, btnImportar, btnAlertas, btnCompartidas, btnBorrarTodos,
-                btnGrafico, btnPieChart, btnExportarPDF, lblTotal);
+                btnGrafico, btnPieChart, btnExportarPDF, btnCalendario, lblTotal);
 
         VBox panel = new VBox(10, titulo, tablaGastos, botonesTabla, lblMensajeImport);
         panel.setPadding(new Insets(10));
