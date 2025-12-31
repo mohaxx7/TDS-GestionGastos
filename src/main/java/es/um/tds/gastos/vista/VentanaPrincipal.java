@@ -222,6 +222,10 @@ public class VentanaPrincipal extends Application {
         // Botones
         Button btnFiltrar = new Button("Aplicar Filtros");
         btnFiltrar.setStyle("-fx-background-color: #9C27B0; -fx-text-fill: white;");
+        // Campo de búsqueda por descripción
+        Label lblBuscar = new Label("Buscar en descripción:");
+        TextField txtBuscar = new TextField();
+        txtBuscar.setPromptText("Texto a buscar...");
 
         Button btnLimpiar = new Button("Limpiar");
         btnLimpiar.setOnAction(e -> {
@@ -229,6 +233,7 @@ public class VentanaPrincipal extends Application {
             dateDesde.setValue(null);
             dateHasta.setValue(null);
             listaMeses.getSelectionModel().clearSelection();
+            txtBuscar.clear();
             actualizarTabla();
         });
 
@@ -237,7 +242,8 @@ public class VentanaPrincipal extends Application {
                     comboFiltroCategoria.getValue(),
                     dateDesde.getValue(),
                     dateHasta.getValue(),
-                    listaMeses.getSelectionModel().getSelectedItems());
+                    listaMeses.getSelectionModel().getSelectedItems(),
+                    txtBuscar.getText().trim());
         });
 
         HBox botonesBox = new HBox(10, btnFiltrar, btnLimpiar);
@@ -245,6 +251,7 @@ public class VentanaPrincipal extends Application {
         VBox panel = new VBox(8,
                 titulo,
                 lblCategoria, comboFiltroCategoria,
+                lblBuscar, txtBuscar,
                 lblMeses, listaMeses,
                 lblDesde, dateDesde,
                 lblHasta, dateHasta,
@@ -319,13 +326,21 @@ public class VentanaPrincipal extends Application {
      * Aplica los filtros seleccionados a la lista de gastos.
      */
     private void aplicarFiltros(Categoria categoria, java.time.LocalDate desde,
-            java.time.LocalDate hasta, java.util.List<String> mesesSeleccionados) {
+            java.time.LocalDate hasta, java.util.List<String> mesesSeleccionados, String textoBusqueda) {
         java.util.List<Gasto> gastosFiltrados = controlador.obtenerTodosLosGastos();
 
         // Filtrar por categoria
         if (categoria != null) {
             gastosFiltrados = gastosFiltrados.stream()
                     .filter(g -> g.getCategoria().getNombre().equals(categoria.getNombre()))
+                    .collect(java.util.stream.Collectors.toList());
+        }
+
+        // Filtrar por texto en descripción
+        if (textoBusqueda != null && !textoBusqueda.isEmpty()) {
+            String busqueda = textoBusqueda.toLowerCase();
+            gastosFiltrados = gastosFiltrados.stream()
+                    .filter(g -> g.getDescripcion().toLowerCase().contains(busqueda))
                     .collect(java.util.stream.Collectors.toList());
         }
 
