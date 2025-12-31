@@ -405,8 +405,19 @@ public class VentanaPrincipal extends Application {
         btnEliminar.setOnAction(e -> {
             Gasto seleccionado = tablaGastos.getSelectionModel().getSelectedItem();
             if (seleccionado != null) {
-                controlador.eliminarGasto(seleccionado.getId());
-                actualizarTabla();
+                // Diálogo de confirmación
+                javafx.scene.control.Alert confirmacion = new javafx.scene.control.Alert(
+                        javafx.scene.control.Alert.AlertType.CONFIRMATION);
+                confirmacion.setTitle("Confirmar eliminación");
+                confirmacion.setHeaderText("¿Eliminar este gasto?");
+                confirmacion.setContentText(String.format("%.2f € - %s",
+                        seleccionado.getCantidad(), seleccionado.getDescripcion()));
+
+                java.util.Optional<javafx.scene.control.ButtonType> resultado = confirmacion.showAndWait();
+                if (resultado.isPresent() && resultado.get() == javafx.scene.control.ButtonType.OK) {
+                    controlador.eliminarGasto(seleccionado.getId());
+                    actualizarTabla();
+                }
             }
         });
 
