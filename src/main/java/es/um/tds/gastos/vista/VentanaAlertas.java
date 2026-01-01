@@ -99,7 +99,6 @@ public class VentanaAlertas {
 
         // Boton crear
         Button btnCrear = new Button("Crear Alerta");
-        btnCrear.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
         Label lblMensaje = new Label();
 
         btnCrear.setOnAction(e -> {
@@ -169,7 +168,6 @@ public class VentanaAlertas {
         });
 
         Button btnEliminar = new Button("Eliminar");
-        btnEliminar.setStyle("-fx-background-color: #f44336; -fx-text-fill: white;");
         btnEliminar.setOnAction(e -> {
             Alerta sel = listaAlertas.getSelectionModel().getSelectedItem();
             if (sel != null) {
@@ -213,7 +211,6 @@ public class VentanaAlertas {
         });
 
         Button btnVerificar = new Button("Verificar Alertas");
-        btnVerificar.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white;");
         btnVerificar.setOnAction(e -> {
             // Verificar alertas con los gastos actuales
             controlador.verificarAlertas();

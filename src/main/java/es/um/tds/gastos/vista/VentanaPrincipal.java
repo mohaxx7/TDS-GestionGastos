@@ -94,9 +94,7 @@ public class VentanaPrincipal extends Application {
         comboCategoria.setPromptText("Selecciona categoria");
         cargarCategorias(comboCategoria);
 
-        // Boton añadir
         Button btnAnadir = new Button("Añadir Gasto");
-        btnAnadir.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
 
         // Label para mensajes
         Label lblMensaje = new Label();
@@ -231,7 +229,6 @@ public class VentanaPrincipal extends Application {
 
         // Botones
         Button btnFiltrar = new Button("Aplicar Filtros");
-        btnFiltrar.setStyle("-fx-background-color: #9C27B0; -fx-text-fill: white;");
         // Campo de búsqueda por descripción
         Label lblBuscar = new Label("Buscar en descripción:");
         TextField txtBuscar = new TextField();
@@ -294,7 +291,6 @@ public class VentanaPrincipal extends Application {
 
         // Boton para actualizar estadisticas
         Button btnActualizar = new Button("Actualizar");
-        btnActualizar.setStyle("-fx-background-color: #607D8B; -fx-text-fill: white;");
         btnActualizar.setOnAction(e -> {
             java.util.List<Gasto> gastos = controlador.obtenerTodosLosGastos();
             if (!gastos.isEmpty()) {

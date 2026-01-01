@@ -92,7 +92,6 @@ public class VentanaCuentasCompartidas {
 
         // Boton crear cuenta
         Button btnCrear = new Button("Crear Cuenta");
-        btnCrear.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
         Label lblMensaje = new Label();
 
         btnCrear.setOnAction(e -> {
@@ -220,7 +219,6 @@ public class VentanaCuentasCompartidas {
         txtDescGasto.setPromptText("Ej: Cena");
 
         Button btnAnadirGasto = new Button("Añadir Gasto");
-        btnAnadirGasto.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white;");
         Label lblMensajeGasto = new Label();
 
         btnAnadirGasto.setOnAction(e -> {
