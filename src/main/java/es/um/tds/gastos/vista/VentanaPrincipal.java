@@ -41,11 +41,19 @@ public class VentanaPrincipal extends Application {
         // Panel izquierdo completo
         VBox panelIzquierdo = new VBox(20, panelFormulario, panelFiltros, crearPanelEstadisticas());
 
+        // Envolver en ScrollPane para poder hacer scroll cuando la ventana es pequeña
+        javafx.scene.control.ScrollPane scrollIzquierdo = new javafx.scene.control.ScrollPane(panelIzquierdo);
+        scrollIzquierdo.setFitToWidth(true);
+        scrollIzquierdo.setHbarPolicy(javafx.scene.control.ScrollPane.ScrollBarPolicy.NEVER);
+        scrollIzquierdo.setVbarPolicy(javafx.scene.control.ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollIzquierdo.setMinWidth(250);
+        scrollIzquierdo.setMaxWidth(300);
+
         // Panel derecho: Tabla de gastos
         VBox panelTabla = crearPanelTabla();
 
         // Layout principal - hacer que la tabla se expanda
-        HBox root = new HBox(20, panelIzquierdo, panelTabla);
+        HBox root = new HBox(20, scrollIzquierdo, panelTabla);
         root.setPadding(new Insets(20));
         HBox.setHgrow(panelTabla, javafx.scene.layout.Priority.ALWAYS);
         VBox.setVgrow(tablaGastos, javafx.scene.layout.Priority.ALWAYS);
