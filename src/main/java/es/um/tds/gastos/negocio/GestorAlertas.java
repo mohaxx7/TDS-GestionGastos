@@ -146,11 +146,22 @@ public class GestorAlertas implements IGestorAlertas {
     public void verificarAlertas(List<Gasto> gastos) {
         List<Alerta> alertasActivas = repositorio.obtenerAlertasActivas();
 
-        for (Alerta alerta : alertasActivas) {
-            double gastoTotal = calcularGastoSegunAlerta(gastos, alerta);
+        // Obtener fechas únicas de los gastos para verificar en cada periodo
+        java.util.Set<java.time.YearMonth> mesesUnicos = new java.util.HashSet<>();
+        for (Gasto g : gastos) {
+            mesesUnicos.add(java.time.YearMonth.from(g.getFecha()));
+        }
 
-            if (alerta.superaLimite(gastoTotal)) {
-                generarNotificacion(alerta, gastoTotal);
+        for (Alerta alerta : alertasActivas) {
+            // Verificar para cada mes que tenga gastos
+            for (java.time.YearMonth mes : mesesUnicos) {
+                LocalDate fechaReferencia = mes.atDay(15); // Mitad del mes
+                double gastoTotal = calcularGastoSegunAlerta(gastos, alerta, fechaReferencia);
+
+                if (alerta.superaLimite(gastoTotal)) {
+                    generarNotificacion(alerta, gastoTotal);
+                    break; // Solo una notificación por alerta
+                }
             }
         }
     }
@@ -161,16 +172,15 @@ public class GestorAlertas implements IGestorAlertas {
      * Delega el calculo del periodo a la estrategia asociada a cada alerta,
      * lo que permite añadir nuevos tipos de periodo sin modificar este metodo.
      * 
-     * @param gastos lista de gastos a evaluar
-     * @param alerta alerta que define el tipo de periodo y categoria
+     * @param gastos          lista de gastos a evaluar
+     * @param alerta          alerta que define el tipo de periodo y categoria
+     * @param fechaReferencia fecha a usar para el calculo del periodo
      * @return total de gastos del periodo
      */
-    private double calcularGastoSegunAlerta(List<Gasto> gastos, Alerta alerta) {
-        LocalDate hoy = LocalDate.now();
-
+    private double calcularGastoSegunAlerta(List<Gasto> gastos, Alerta alerta, LocalDate fechaReferencia) {
         // Usar la estrategia de la alerta para filtrar por periodo
         EstrategiaCalculoPeriodo estrategia = alerta.getEstrategia();
-        List<Gasto> gastosFiltrados = estrategia.filtrarGastosPeriodo(gastos, hoy);
+        List<Gasto> gastosFiltrados = estrategia.filtrarGastosPeriodo(gastos, fechaReferencia);
 
         // Si la alerta tiene categoria, filtrar tambien por categoria
         if (alerta.getCategoria() != null) {
