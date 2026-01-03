@@ -152,9 +152,16 @@ public class CuentaCompartida {
         if (cantidad <= 0) {
             throw new IllegalArgumentException("La cantidad debe ser mayor que 0");
         }
-        if (pagador == null || !personas.contains(pagador)) {
-            throw new IllegalArgumentException("El pagador debe ser una persona de la cuenta");
+        if (pagador == null) {
+            throw new IllegalArgumentException("El pagador no puede ser nulo");
         }
+
+        // Buscar la persona correcta en la lista interna por nombre
+        PersonaCuenta pagadorReal = personas.stream()
+                .filter(p -> p.getNombre().equalsIgnoreCase(pagador.getNombre()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("El pagador debe ser una persona de la cuenta"));
+
         if (descripcion == null || descripcion.trim().isEmpty()) {
             descripcion = "Gasto compartido";
         }
@@ -162,10 +169,10 @@ public class CuentaCompartida {
         // Crear gasto con categoría genérica "Compartido"
         Categoria catCompartido = new Categoria("Compartido");
         Gasto gasto = new Gasto(cantidad, java.time.LocalDate.now(), descripcion, catCompartido);
-        gasto.setPagador(pagador);
+        gasto.setPagador(pagadorReal);
 
         gastos.add(gasto);
-        actualizarSaldos(gasto, pagador);
+        actualizarSaldos(gasto, pagadorReal);
     }
 
     /**

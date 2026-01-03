@@ -255,4 +255,8 @@ public class Controlador {
     public java.util.List<es.um.tds.gastos.modelo.CuentaCompartida> obtenerCuentasCompartidas() {
         return repoCuentas.obtenerTodas();
     }
+
+    public void eliminarCuentaCompartida(es.um.tds.gastos.modelo.CuentaCompartida cuenta) {
+        repoCuentas.eliminar(cuenta);
+    }
 }

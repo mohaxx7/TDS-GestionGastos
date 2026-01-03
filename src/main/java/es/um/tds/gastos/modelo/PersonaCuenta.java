@@ -123,11 +123,19 @@ public class PersonaCuenta {
         if (obj == null || getClass() != obj.getClass())
             return false;
         PersonaCuenta that = (PersonaCuenta) obj;
+        // Comparar por nombre si el email está vacío
+        if (email == null || email.isEmpty() || that.email == null || that.email.isEmpty()) {
+            return nombre.equalsIgnoreCase(that.nombre);
+        }
         return email.equalsIgnoreCase(that.email);
     }
 
     @Override
     public int hashCode() {
+        // Usar nombre si email está vacío
+        if (email == null || email.isEmpty()) {
+            return nombre.toLowerCase().hashCode();
+        }
         return email.toLowerCase().hashCode();
     }
 }

@@ -54,6 +54,10 @@ public class RepositorioCuentasCompartidasJSON {
         guardarDatos();
     }
 
+    public void eliminar(CuentaCompartida cuenta) {
+        eliminar(cuenta.getId());
+    }
+
     public CuentaCompartida buscarPorId(int id) {
         return cuentas.stream()
                 .filter(c -> c.getId() == id)

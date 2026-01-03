@@ -165,7 +165,30 @@ public class VentanaCuentasCompartidas {
                     mostrarDetallesCuenta(newVal);
                 });
 
-        VBox panel = new VBox(10, titulo, listaCuentas);
+        // Botón para eliminar cuenta
+        Button btnEliminar = new Button("Eliminar Cuenta");
+        btnEliminar.setOnAction(e -> {
+            CuentaCompartida seleccionada = listaCuentas.getSelectionModel().getSelectedItem();
+            if (seleccionada == null) {
+                return;
+            }
+
+            Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmacion.setTitle("Confirmar eliminación");
+            confirmacion.setHeaderText("¿Eliminar cuenta \"" + seleccionada.getNombre() + "\"?");
+            confirmacion.setContentText("Esta acción no se puede deshacer.");
+
+            confirmacion.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.OK) {
+                    controlador.eliminarCuentaCompartida(seleccionada);
+                    actualizarListaCuentas();
+                    cuentaSeleccionada = null;
+                    mostrarDetallesCuenta(null);
+                }
+            });
+        });
+
+        VBox panel = new VBox(10, titulo, listaCuentas, btnEliminar);
         panel.setPadding(new Insets(10));
         panel.setStyle("-fx-border-color: #ccc; -fx-border-radius: 5;");
         panel.setPrefWidth(280);
@@ -199,18 +222,17 @@ public class VentanaCuentasCompartidas {
         Label lblPagador = new Label("Pagado por:");
         comboPagador = new ComboBox<>();
         comboPagador.setPromptText("Selecciona quien pagó");
-        comboPagador.setCellFactory(lv -> new ListCell<PersonaCuenta>() {
+
+        // Usar StringConverter para mostrar correctamente las personas
+        comboPagador.setConverter(new javafx.util.StringConverter<PersonaCuenta>() {
             @Override
-            protected void updateItem(PersonaCuenta p, boolean empty) {
-                super.updateItem(p, empty);
-                setText(empty || p == null ? null : p.getNombre());
+            public String toString(PersonaCuenta persona) {
+                return persona == null ? "" : persona.getNombre();
             }
-        });
-        comboPagador.setButtonCell(new ListCell<PersonaCuenta>() {
+
             @Override
-            protected void updateItem(PersonaCuenta p, boolean empty) {
-                super.updateItem(p, empty);
-                setText(empty || p == null ? null : p.getNombre());
+            public PersonaCuenta fromString(String string) {
+                return null; // No necesitamos convertir de String a PersonaCuenta
             }
         });
 
