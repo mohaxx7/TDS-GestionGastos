@@ -49,6 +49,10 @@ public class VentanaCuentasCompartidas {
         // Panel derecho: Detalles de cuenta
         VBox panelDetalles = crearPanelDetalles();
 
+        // Hacer que los paneles de cuentas y detalles se expandan
+        HBox.setHgrow(panelCuentas, Priority.ALWAYS);
+        HBox.setHgrow(panelDetalles, Priority.ALWAYS);
+
         HBox root = new HBox(15, panelCrear, panelCuentas, panelDetalles);
         root.setPadding(new Insets(15));
 

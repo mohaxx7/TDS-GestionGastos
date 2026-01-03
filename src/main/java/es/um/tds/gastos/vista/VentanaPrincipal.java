@@ -397,26 +397,32 @@ public class VentanaPrincipal extends Application {
         listaGastos = FXCollections.observableArrayList();
         tablaGastos.setItems(listaGastos);
 
+        // Hacer que las columnas ocupen todo el espacio disponible
+        tablaGastos.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
         // Columna cantidad
         TableColumn<Gasto, Double> colCantidad = new TableColumn<>("Cantidad");
         colCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
-        colCantidad.setPrefWidth(80);
+        colCantidad.setMinWidth(80);
+        colCantidad.setMaxWidth(120);
 
         // Columna fecha
         TableColumn<Gasto, LocalDate> colFecha = new TableColumn<>("Fecha");
         colFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
-        colFecha.setPrefWidth(100);
+        colFecha.setMinWidth(100);
+        colFecha.setMaxWidth(150);
 
-        // Columna descripcion
+        // Columna descripcion - esta se expandirá más
         TableColumn<Gasto, String> colDescripcion = new TableColumn<>("Descripcion");
         colDescripcion.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
-        colDescripcion.setPrefWidth(200);
+        colDescripcion.setMinWidth(200);
 
         // Columna categoria
         TableColumn<Gasto, String> colCategoria = new TableColumn<>("Categoria");
         colCategoria.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(
                 cellData.getValue().getCategoria().getNombre()));
-        colCategoria.setPrefWidth(100);
+        colCategoria.setMinWidth(100);
+        colCategoria.setMaxWidth(150);
 
         tablaGastos.getColumns().addAll(colCantidad, colFecha, colDescripcion, colCategoria);
 

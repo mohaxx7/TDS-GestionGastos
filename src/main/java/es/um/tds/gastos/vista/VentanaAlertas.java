@@ -47,6 +47,10 @@ public class VentanaAlertas {
         // Panel derecho: Notificaciones
         VBox panelNotificaciones = crearPanelNotificaciones();
 
+        // Hacer que los paneles se expandan al redimensionar
+        HBox.setHgrow(panelAlertas, Priority.ALWAYS);
+        HBox.setHgrow(panelNotificaciones, Priority.ALWAYS);
+
         HBox root = new HBox(15, panelCrear, panelAlertas, panelNotificaciones);
         root.setPadding(new Insets(15));
 
@@ -176,10 +180,13 @@ public class VentanaAlertas {
             }
         });
 
+        // Hacer que la lista se expanda verticalmente
+        VBox.setVgrow(listaAlertas, Priority.ALWAYS);
+
         VBox panel = new VBox(10, titulo, listaAlertas, btnEliminar);
         panel.setPadding(new Insets(10));
         panel.setStyle("-fx-border-color: #ccc; -fx-border-radius: 5;");
-        panel.setPrefWidth(280);
+        panel.setMinWidth(200);
 
         return panel;
     }
@@ -232,10 +239,13 @@ public class VentanaAlertas {
 
         HBox botones = new HBox(10, btnVerificar, btnMarcarLeidas);
 
+        // Hacer que la lista se expanda verticalmente
+        VBox.setVgrow(listaNotificaciones, Priority.ALWAYS);
+
         VBox panel = new VBox(10, titulo, chkHistorial, listaNotificaciones, botones);
         panel.setPadding(new Insets(10));
         panel.setStyle("-fx-border-color: #ccc; -fx-border-radius: 5;");
-        panel.setPrefWidth(300);
+        panel.setMinWidth(250);
 
         return panel;
     }
