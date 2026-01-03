@@ -217,15 +217,28 @@ public class VentanaPrincipal extends Application {
         DatePicker dateHasta = new DatePicker();
         dateHasta.setPromptText("Fecha fin");
 
-        // Filtro por meses específicos
-        Label lblMeses = new Label("Filtrar por meses:");
-        ListView<String> listaMeses = new ListView<>();
-        listaMeses.getItems().addAll(
+        // Filtro por meses específicos (ComboBox como categorías)
+        Label lblMeses = new Label("Filtrar por mes:");
+        ComboBox<String> comboMes = new ComboBox<>();
+        comboMes.setPromptText("Todos los meses");
+        comboMes.getItems().add(null); // Opción "Todos"
+        comboMes.getItems().addAll(
                 "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
                 "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
-        listaMeses.getSelectionModel().setSelectionMode(javafx.scene.control.SelectionMode.MULTIPLE);
-        listaMeses.setPrefHeight(80);
-        listaMeses.setStyle("-fx-font-size: 11px;");
+        comboMes.setCellFactory(lv -> new ListCell<String>() {
+            @Override
+            protected void updateItem(String mes, boolean empty) {
+                super.updateItem(mes, empty);
+                setText(mes == null ? "Todos los meses" : mes);
+            }
+        });
+        comboMes.setButtonCell(new ListCell<String>() {
+            @Override
+            protected void updateItem(String mes, boolean empty) {
+                super.updateItem(mes, empty);
+                setText(mes == null ? "Todos los meses" : mes);
+            }
+        });
 
         // Botones
         Button btnFiltrar = new Button("Aplicar Filtros");
@@ -239,17 +252,22 @@ public class VentanaPrincipal extends Application {
             comboFiltroCategoria.setValue(null);
             dateDesde.setValue(null);
             dateHasta.setValue(null);
-            listaMeses.getSelectionModel().clearSelection();
+            comboMes.setValue(null);
             txtBuscar.clear();
             actualizarTabla();
         });
 
         btnFiltrar.setOnAction(e -> {
+            // Convertir el mes seleccionado a lista para compatibilidad
+            java.util.List<String> mesesSeleccionados = new java.util.ArrayList<>();
+            if (comboMes.getValue() != null) {
+                mesesSeleccionados.add(comboMes.getValue());
+            }
             aplicarFiltros(
                     comboFiltroCategoria.getValue(),
                     dateDesde.getValue(),
                     dateHasta.getValue(),
-                    listaMeses.getSelectionModel().getSelectedItems(),
+                    mesesSeleccionados,
                     txtBuscar.getText().trim());
         });
 
@@ -259,7 +277,7 @@ public class VentanaPrincipal extends Application {
                 titulo,
                 lblCategoria, comboFiltroCategoria,
                 lblBuscar, txtBuscar,
-                lblMeses, listaMeses,
+                lblMeses, comboMes,
                 lblDesde, dateDesde,
                 lblHasta, dateHasta,
                 botonesBox);
