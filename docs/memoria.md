@@ -14,7 +14,6 @@
 
 **Grupo 3.2**
 
-**DNI:49967993X**
 
 **mohamed.b.z@um.es**
 
